@@ -77,21 +77,57 @@
         { id: '9:16', label: '9:16 (縦長)' },
       ];
 
+      // 指定されたアスペクト比で画像を切り抜く（クロップする）関数
+      const cropImageToAspectRatio = (base64Str, ratioStr) => {
+        return new Promise((resolve) => {
+          if (ratioStr === 'original') {
+            resolve(base64Str);
+            return;
+          }
+          const img = new window.Image();
+          img.onload = () => {
+            let targetRatio = 1;
+            if (ratioStr === '16:9') targetRatio = 16 / 9;
+            else if (ratioStr === '9:16') targetRatio = 9 / 16;
+            
+            const currentRatio = img.width / img.height;
+            let sx = 0, sy = 0, sWidth = img.width, sHeight = img.height;
+
+            if (currentRatio > targetRatio) {
+              // 元画像がターゲットより横長の場合 -> 左右をカット
+              sWidth = img.height * targetRatio;
+              sx = (img.width - sWidth) / 2;
+            } else if (currentRatio < targetRatio) {
+              // 元画像がターゲットより縦長の場合 -> 上下をカット
+              sHeight = img.width / targetRatio;
+              sy = (img.height - sHeight) / 2;
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = sWidth;
+            canvas.height = sHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, sWidth, sHeight);
+            
+            // 切り抜いた画像を返す
+            resolve(canvas.toDataURL('image/jpeg', 0.9));
+          };
+          img.src = base64Str;
+        });
+      };
+
       const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
-          // エラーメッセージをリセット
           setError('');
           
           const reader = new FileReader();
           reader.onloadend = () => {
-            // 画像を読み込んだ後、自動でリサイズ＆圧縮を行う
             const img = new window.Image();
             img.onload = () => {
               const canvas = document.createElement('canvas');
               let width = img.width;
               let height = img.height;
-              // APIの制限に合わせて最大2048pxにリサイズ
               const maxDimension = 2048; 
 
               if (width > maxDimension || height > maxDimension) {
@@ -109,7 +145,6 @@
               const ctx = canvas.getContext('2d');
               ctx.drawImage(img, 0, 0, width, height);
 
-              // 圧縮して軽量なJPEGにする（画質80%）
               const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
               
               setSourceImage(compressedDataUrl);
@@ -148,11 +183,15 @@
           let response;
 
           if (mode === 'image') {
-            const base64Data = sourceImage.split(',')[1];
-            const mimeType = sourceImage.split(';')[0].split(':')[1];
+            // アスペクト比に合わせて事前に画像をクロップする
+            const processedImageBase64 = await cropImageToAspectRatio(sourceImage, aspectRatio);
+            
+            const base64Data = processedImageBase64.split(',')[1];
+            const mimeType = processedImageBase64.split(';')[0].split(':')[1];
+            
             let finalPrompt = prompt;
             if (aspectRatio !== 'original') {
-              finalPrompt += `\n\n【重要】出力画像のアスペクト比（縦横比）は必ず「${aspectRatio}」で生成してください。`;
+              finalPrompt += `\n\n【重要】出力画像のアスペクト比（縦横比）は必ず「${aspectRatio}」になるように全体を描画してください。`;
             }
 
             // Cloudflare Workerへ送信 (Image to Image)
@@ -185,15 +224,18 @@
 
           } else {
             let textModePrompt = `以下は画像内に配置したいテキスト情報です。\nタイトル：「${appName}」\nキャッチコピー：「${catchCopy}」\n\nデザインの指示：\n${prompt}`;
+            
+            // Imagen APIの公式アスペクト比パラメータをセット
+            const apiParams = { sampleCount: 1 };
             if (aspectRatio !== 'original') {
-              textModePrompt += `\n\n【重要】出力画像のアスペクト比（縦横比）は必ず「${aspectRatio}」になるように構図を調整してください。`;
+              apiParams.aspectRatio = aspectRatio;
             }
 
             // Cloudflare Workerへ送信 (Text to Image)
             const url = `${WORKER_URL}/api/generate-text-to-image`;
             const payload = {
               instances: { prompt: textModePrompt },
-              parameters: { sampleCount: 1 }
+              parameters: apiParams
             };
 
             response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
