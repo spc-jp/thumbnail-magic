@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Upload, Image as ImageIcon, Sparkles, Download, Wand2, RefreshCw, Type } from 'lucide-react';
 
-const App = () => {
+export default function App() {
   const [mode, setMode] = useState('image');
   const [sourceImage, setSourceImage] = useState(null);
   
@@ -16,23 +16,23 @@ const App = () => {
   const fileInputRef = useRef(null);
 
   const presets = [
-    { id: 1, title: '❶ アニメ映画風', icon: '🌸', prompt: 'この写真をアニメ映画のワンシーンのようにイラスト化して。背景も自然豊かにして、新海誠監督のような美しい光の表現を入れてください。' },
-    { id: 2, title: '❷ 水彩画タッチ', icon: '🎨', prompt: 'この写真を水彩画風に変換して。やさしいタッチで、背景はふんわりぼかして、温かみのある色合いにしてください。' },
-    { id: 3, title: '❸ 絵本の表紙風', icon: '📖', prompt: 'この写真を使って、子ども向け絵本の表紙をデザインして。可愛いイラスト調にして、上部に「ぼくのぼうけん」という手書き風のタイトル文字を入れてください。' },
-    { id: 4, title: '❹ レトロポスター風', icon: '🎞️', prompt: 'この写真を1960年代の映画ポスター風に変換して。レトロな色使いで、少し色褪せたようなビンテージ加工を施してください。' },
-    { id: 5, title: '❺ グリーティング', icon: '☀️', prompt: 'この写真を使って、夏のグリーティングカードを作って。爽やかなイラスト調にして、「暑中お見舞い申し上げます」という文字を美しく配置してください。' },
-    { id: 6, title: '❻ アイコンデフォルメ', icon: '✨', prompt: 'この写真をSNSアイコン用にかわいくデフォルメしたイラストにして。丸く切り抜ける構図で、ポップで明るい雰囲気にしてください。' },
-    { id: 7, title: '❼ コラージュ風', icon: '🖼️', prompt: 'この写真をベースに、複数の思い出の写真が散りばめられたようなコラージュ風のイラストにして。統一感のあるパステルカラーのタッチで仕上げてください。' },
-    { id: 8, title: '❽ 家族似顔絵', icon: '👨‍👩‍👧', prompt: 'この写真をもとに、あたたかい雰囲気の似顔絵イラストにして。LINEスタンプに使えるような、少しコミカルで親しみやすいタッチにしてください。' },
-    { id: 9, title: '❾ ジブリ映画風', icon: '🍃', prompt: 'この写真を、スタジオジブリのアニメ映画に出てくるような、温かみのある手描きタッチのイラストにして。豊かな自然や美しい青空、ノスタルジックな雰囲気を強調してください。' },
-    { id: 10, title: '❿ 3Dアニメ風', icon: '🧸', prompt: 'この写真を、海外の高品質な3Dアニメーション映画（ピクサー風）のCGキャラクターや世界観に変換して。立体的でカラフル、そして表情豊かでポップな印象にしてください。' },
-    { id: 11, title: '⓫ ドット絵風', icon: '👾', prompt: 'この写真を、昔のスーパーファミコンのような16ビットのドット絵（ピクセルアート）に変換して。レトロゲームのワンシーンのような懐かしい雰囲気にしてください。' },
-    { id: 12, title: '⓬ シンプル線画', icon: '✍️', prompt: 'この写真を、シンプルでおしゃれな線画（ラインアート）イラストにして。色は控えめなモノトーンやベージュ系で、洗練されたカフェのような雰囲気にしてください。' },
+    { id: 1, title: '1. アニメ映画風', icon: '🌸', prompt: 'この写真をアニメ映画のワンシーンのようにイラスト化して。背景も自然豊かにして、美しい光の表現を入れてください。' },
+    { id: 2, title: '2. 水彩画タッチ', icon: '🎨', prompt: 'この写真を水彩画風に変換して。やさしいタッチで、背景はふんわりぼかして、温かみのある色合いにしてください。' },
+    { id: 3, title: '3. 絵本の表紙風', icon: '📖', prompt: 'この写真を使って、子ども向け絵本の表紙をデザインして。可愛いイラスト調にして、タイトル文字を入れるスペースを上部に空けてください。' },
+    { id: 4, title: '4. レトロポスター', icon: '🎞️', prompt: 'この写真を1960年代の映画ポスター風に変換して。レトロな色使いで、少し色褪せたようなビンテージ加工を施してください。' },
+    { id: 5, title: '5. グリーティング', icon: '☀️', prompt: 'この写真を使って、爽やかなイラスト調のグリーティングカードを作ってください。' },
+    { id: 6, title: '6. アイコン用', icon: '✨', prompt: 'この写真をSNSアイコン用にかわいくデフォルメしたイラストにして。丸く切り抜ける構図で、ポップで明るい雰囲気にしてください。' },
+    { id: 7, title: '7. コラージュ風', icon: '🖼️', prompt: 'この写真をベースに、パステルカラーのタッチで統一感のあるおしゃれなイラストに仕上げてください。' },
+    { id: 8, title: '8. 家族似顔絵', icon: '👨‍👩‍👧', prompt: 'この写真をもとに、あたたかい雰囲気の似顔絵イラストにして。少しコミカルで親しみやすいタッチにしてください。' },
+    { id: 9, title: '9. ジブリ映画風', icon: '🍃', prompt: 'この写真を、温かみのある手描きタッチのアニメイラストにして。豊かな自然や美しい青空、ノスタルジックな雰囲気を強調してください。' },
+    { id: 10, title: '10. 3Dアニメ風', icon: '🧸', prompt: 'この写真を、海外の高品質な3Dアニメーション映画のようなCGキャラクターや世界観に変換して。立体的でカラフル、ポップな印象にしてください。' },
+    { id: 11, title: '11. ドット絵風', icon: '👾', prompt: 'この写真を、昔のスーパーファミコンのような16ビットのドット絵（ピクセルアート）に変換して。レトロゲームのような雰囲気にしてください。' },
+    { id: 12, title: '12. シンプル線画', icon: '✍️', prompt: 'この写真を、シンプルでおしゃれな線画（ラインアート）イラストにして。色は控えめなモノトーンやベージュ系にしてください。' },
   ];
 
   const ratios = [
     { id: 'original', label: 'そのまま' },
-    { id: '1:1', label: '1:1 (正方形)' },
+    { id: '1:1', label: '1:1 (正方)' },
     { id: '16:9', label: '16:9 (横長)' },
     { id: '9:16', label: '9:16 (縦長)' },
   ];
@@ -92,7 +92,6 @@ const App = () => {
 
     try {
       const apiKey = ""; 
-      
       let response;
       let success = false;
       const delays = [1000, 2000, 4000, 8000, 16000];
@@ -103,10 +102,10 @@ const App = () => {
 
         let finalPrompt = prompt;
         if (aspectRatio !== 'original') {
-          finalPrompt += "\n\n【重要】出力画像のアスペクト比（縦横比）は必ず「" + aspectRatio + "」で生成してください。";
+          finalPrompt += `\n\n【重要】出力画像のアスペクト比（縦横比）は必ず「${aspectRatio}」で生成してください。`;
         }
 
-        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=" + apiKey;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${apiKey}`;
         const payload = {
           contents: [
             {
@@ -133,18 +132,18 @@ const App = () => {
         const outputBase64 = result.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
 
         if (outputBase64) {
-          setResultImage("data:image/jpeg;base64," + outputBase64);
+          setResultImage(`data:image/jpeg;base64,${outputBase64}`);
         } else {
           setError('AIが画像を生成できませんでした。プロンプトの内容を変更してください。');
         }
 
       } else {
-        let textModePrompt = "以下は画像内に美しく配置・表現したいテキスト情報です。\nタイトル：「" + appName + "」\nキャッチコピー：「" + catchCopy + "」\n\nデザインの指示：\n" + prompt;
+        let textModePrompt = `以下は画像内に配置したいテキスト情報です。\nタイトル：「${appName}」\nキャッチコピー：「${catchCopy}」\n\nデザインの指示：\n${prompt}`;
         if (aspectRatio !== 'original') {
-          textModePrompt += "\n\n【重要】出力画像のアスペクト比（縦横比）は必ず「" + aspectRatio + "」になるように構図を調整してください。";
+          textModePrompt += `\n\n【重要】出力画像のアスペクト比（縦横比）は必ず「${aspectRatio}」になるように構図を調整してください。`;
         }
 
-        const url = "https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=" + apiKey;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`;
         const payload = {
           instances: { prompt: textModePrompt },
           parameters: { sampleCount: 1 }
@@ -164,7 +163,7 @@ const App = () => {
         const outputBase64 = result.predictions?.[0]?.bytesBase64Encoded;
 
         if (outputBase64) {
-          setResultImage("data:image/png;base64," + outputBase64);
+          setResultImage(`data:image/png;base64,${outputBase64}`);
         } else {
           setError('AIが画像を生成できませんでした。プロンプトの内容を変更してください。');
         }
@@ -182,7 +181,7 @@ const App = () => {
     if (resultImage) {
       const a = document.createElement('a');
       a.href = resultImage;
-      a.download = "magic-thumbnail-" + Date.now() + ".jpg";
+      a.download = `magic-thumbnail-${Date.now()}.jpg`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -214,14 +213,14 @@ const App = () => {
             <div className="flex bg-gray-200 p-1 rounded-xl">
               <button
                 onClick={() => setMode('image')}
-                className={"flex-1 flex items-center justify-center gap-2 py-3 text-sm font-bold rounded-lg transition-all " + (mode === 'image' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700')}
+                className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-bold rounded-lg transition-all ${mode === 'image' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
               >
                 <ImageIcon className="w-4 h-4" />
                 写真から変換
               </button>
               <button
                 onClick={() => setMode('text')}
-                className={"flex-1 flex items-center justify-center gap-2 py-3 text-sm font-bold rounded-lg transition-all " + (mode === 'text' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700')}
+                className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-bold rounded-lg transition-all ${mode === 'text' ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
               >
                 <Type className="w-4 h-4" />
                 テキストから生成
@@ -229,7 +228,7 @@ const App = () => {
             </div>
 
             {mode === 'image' ? (
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 animate-fade-in">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
                   <ImageIcon className="w-5 h-5 text-indigo-500" />
                   1. 写真を選ぶ
@@ -268,7 +267,7 @@ const App = () => {
                 />
               </div>
             ) : (
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 animate-fade-in">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
                   <Type className="w-5 h-5 text-indigo-500" />
                   1. テキスト情報を入力する
@@ -290,14 +289,14 @@ const App = () => {
                       type="text" 
                       value={catchCopy}
                       onChange={(e) => setCatchCopy(e.target.value)}
-                      placeholder="例: AIがあなたの思い出を特別な一枚に"
+                      placeholder="例: AIが思い出を特別な一枚に"
                       className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-sm"
                     />
                   </div>
                   <div className="bg-blue-50 text-blue-800 p-3 rounded-lg text-xs flex gap-2 items-start border border-blue-100">
                     <Sparkles className="w-4 h-4 shrink-0 mt-0.5" />
                     <p>
-                      <strong>AIの文字入れについて：</strong> 英語の文字は比較的綺麗に描画できますが、日本語（漢字やひらがな）はAIがまだ練習中のため、不思議な形になってしまうことがあります。英語での入力をおすすめします！
+                      <strong>AIの文字入れについて：</strong> 日本語（漢字・ひらがな）はAIがまだ練習中のため、不思議な形になることがあります。英語での入力をおすすめします！
                     </p>
                   </div>
                 </div>
@@ -309,12 +308,12 @@ const App = () => {
                 <Sparkles className="w-5 h-5 text-indigo-500" />
                 2. スタイルを選ぶ
               </h2>
-              <div className="grid grid-cols-2 gap-2 mb-4 h-64 overflow-y-auto pr-2 custom-scrollbar">
+              <div className="grid grid-cols-2 gap-2 mb-4 h-64 overflow-y-auto pr-2">
                 {presets.map(p => (
                   <button
                     key={p.id}
                     onClick={() => handlePresetClick(p)}
-                    className={"text-left p-3 rounded-xl border text-sm transition-all duration-200 flex flex-col justify-center min-h-[60px] " + (prompt && prompt.includes(p.icon) ? 'border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500 shadow-sm' : 'border-gray-200 hover:border-indigo-300 hover:bg-gray-50')}
+                    className={`text-left p-3 rounded-xl border text-sm transition-all duration-200 flex flex-col justify-center min-h-[60px] ${prompt && prompt.includes(p.icon) ? 'border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500 shadow-sm' : 'border-gray-200 hover:border-indigo-300 hover:bg-gray-50'}`}
                   >
                     <div className="font-medium text-gray-800 leading-tight">{p.icon} {p.title}</div>
                   </button>
@@ -344,7 +343,7 @@ const App = () => {
                   <button
                     key={r.id}
                     onClick={() => setAspectRatio(r.id)}
-                    className={"p-3 rounded-xl border text-sm font-medium transition-all flex flex-col items-center justify-center gap-2 " + (aspectRatio === r.id ? 'border-indigo-500 bg-indigo-50 text-indigo-700 ring-1 ring-indigo-500 shadow-sm' : 'border-gray-200 text-gray-600 hover:border-indigo-300 hover:bg-gray-50')}
+                    className={`p-3 rounded-xl border text-sm font-medium transition-all flex flex-col items-center justify-center gap-2 ${aspectRatio === r.id ? 'border-indigo-500 bg-indigo-50 text-indigo-700 ring-1 ring-indigo-500 shadow-sm' : 'border-gray-200 text-gray-600 hover:border-indigo-300 hover:bg-gray-50'}`}
                   >
                     <div className="h-6 flex items-center justify-center text-current opacity-70">
                       {r.id === 'original' && <ImageIcon className="w-5 h-5" />}
@@ -361,7 +360,7 @@ const App = () => {
             <button
               onClick={generateImage}
               disabled={isGenerating || !isReadyToGenerate()}
-              className={"w-full py-4 rounded-xl font-bold text-white shadow-md flex items-center justify-center gap-2 transition-all " + (isGenerating || !isReadyToGenerate() ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 hover:shadow-lg active:scale-[0.98]')}
+              className={`w-full py-4 rounded-xl font-bold text-white shadow-md flex items-center justify-center gap-2 transition-all ${isGenerating || !isReadyToGenerate() ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 hover:shadow-lg active:scale-[0.98]'}`}
             >
               {isGenerating ? (
                 <>
@@ -418,26 +417,13 @@ const App = () => {
               </div>
             )}
             
-            <div className="absolute -top-24 -right-24 w-64 h-64 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+            {/* バックグラウンドの装飾 */}
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-purple-200 rounded-full mix-blend-multiply opacity-30"></div>
+            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-indigo-200 rounded-full mix-blend-multiply opacity-30"></div>
           </div>
 
         </div>
       </main>
-      
-      <style dangerouslySetInnerHTML={{__html: 
-        "@keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } } " +
-        "@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } } " +
-        ".animate-blob { animation: blob 7s infinite; } " +
-        ".animation-delay-2000 { animation-delay: 2s; } " +
-        ".animate-fade-in { animation: fadeIn 0.3s ease-out forwards; } " +
-        ".custom-scrollbar::-webkit-scrollbar { width: 6px; } " +
-        ".custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; } " +
-        ".custom-scrollbar::-webkit-scrollbar-thumb { background: #c7d2fe; border-radius: 10px; } " +
-        ".custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #a5b4fc; }"
-      }} />
     </div>
   );
-};
-
-export default App;
+}
