@@ -79,15 +79,42 @@
       const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
-          if (file.size > 5 * 1024 * 1024) {
-            setError('ファイルサイズは5MB以下にしてください。');
-            return;
-          }
+          // エラーメッセージをリセット
+          setError('');
+          
           const reader = new FileReader();
           reader.onloadend = () => {
-            setSourceImage(reader.result);
-            setResultImage(null);
-            setError('');
+            // 画像を読み込んだ後、自動でリサイズ＆圧縮を行う
+            const img = new window.Image();
+            img.onload = () => {
+              const canvas = document.createElement('canvas');
+              let width = img.width;
+              let height = img.height;
+              // APIの制限に合わせて最大2048pxにリサイズ
+              const maxDimension = 2048; 
+
+              if (width > maxDimension || height > maxDimension) {
+                if (width > height) {
+                  height = Math.round((height * maxDimension) / width);
+                  width = maxDimension;
+                } else {
+                  width = Math.round((width * maxDimension) / height);
+                  height = maxDimension;
+                }
+              }
+
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, width, height);
+
+              // 圧縮して軽量なJPEGにする（画質80%）
+              const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+              
+              setSourceImage(compressedDataUrl);
+              setResultImage(null);
+            };
+            img.src = reader.result;
           };
           reader.readAsDataURL(file);
         }
@@ -255,7 +282,7 @@
                       >
                         <div className="flex justify-center text-gray-400 mb-3"><IconUpload /></div>
                         <p className="text-sm font-medium text-gray-700">クリックしてアップロード</p>
-                        <p className="text-xs text-gray-500 mt-1">JPEG, PNG (最大5MB)</p>
+                        <p className="text-xs text-gray-500 mt-1">※自動でAI最適なサイズに圧縮されます</p>
                       </div>
                     ) : (
                       <div className="relative rounded-xl overflow-hidden group">
